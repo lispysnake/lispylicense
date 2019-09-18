@@ -18,11 +18,17 @@ package main
 
 import (
 	"fmt"
+	"os"
 )
 
 func main() {
+	config := NewConfig(DefaultConfigPath)
+	if config == nil {
+		os.Exit(1)
+	}
 	for i := 0; i < 1000; i++ {
 		u, _ := NewUUID()
 		fmt.Println(u)
 	}
+	fmt.Println(config)
 }
