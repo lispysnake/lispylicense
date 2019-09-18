@@ -6,6 +6,12 @@ management.
 Our initial scope is to facilitate the pregeneration of 1,000 license
 keys and allocate them to Lispy Snake 2D Tite Lifetime License holders.
 
+### Initial alpha
+
+Scope for initial alpha is a CLI only tool (rather than fleshed server)
+that will allocate a UUID on the CLI, stash to DB and store it. In future
+we'll add job-based UUID allocation in a microservice.
+
 ### Key Format
 
 Nothing special here. We simply generate a UUID, and ensure it is completely
