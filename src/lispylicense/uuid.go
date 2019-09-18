@@ -16,13 +16,33 @@
 
 package main
 
+//
+// #cgo pkg-config: uuid
+// #include <uuid/uuid.h>
+// #include <stdlib.h>
+// #include <string.h>
+//
+// char *_help_make_uuid()
+// {
+//      uuid_t id;
+//      char static_ret[36] = { 0 };
+//      uuid_generate(id);
+//      uuid_unparse_lower(id, static_ret);
+//      return strndup(static_ret, sizeof(static_ret));
+// }
+import "C"
+
 import (
-	"fmt"
+	"unsafe"
 )
 
-func main() {
-	for i := 0; i < 1000; i++ {
-		u, _ := NewUUID()
-		fmt.Println(u)
+// NewUUID will return a new UUID struct
+func NewUUID() (string, error) {
+	ch, err := C._help_make_uuid()
+	if err != nil {
+		return "", err
 	}
+	ret := C.GoString(ch)
+	C.free(unsafe.Pointer(ch))
+	return ret, nil
 }
