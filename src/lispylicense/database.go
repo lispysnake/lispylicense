@@ -16,18 +16,33 @@
 
 package main
 
+import (
+	"github.com/jmoiron/sqlx"
+	_ "github.com/mattn/go-sqlite3"
+)
+
 // Database wraps the underlying database connection and helps with
 // the storage side of things.
 type Database struct {
-	reserved int
+	conn *sqlx.DB
 }
 
 // NewDatabase will attempt to open and initialise the database using
 // the given Config instance.
 func NewDatabase(config *Config) (*Database, error) {
-	return nil, nil
+	conn, err := sqlx.Connect(config.Database.Driver, config.Database.Name)
+	if err != nil {
+		return nil, err
+	}
+
+	return &Database{
+		conn: conn,
+	}, nil
 }
 
 // Close will shutdown any resources associate with the database
 func (d *Database) Close() {
+	if d.conn != nil {
+		d.conn.Close()
+	}
 }
