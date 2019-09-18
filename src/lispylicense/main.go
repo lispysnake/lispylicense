@@ -23,6 +23,12 @@ import (
 
 func main() {
 	config := NewConfig(DefaultConfigPath)
+	database, err := NewDatabase(config)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Fatal database error: %v\n", err)
+		os.Exit(1)
+	}
+	defer database.Close()
 	if config == nil {
 		os.Exit(1)
 	}
