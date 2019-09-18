@@ -4,4 +4,4 @@
 driver = "sqlite3"
 
 # Set the path of the database.
-name = ":memory:"
+name = "../db_sync/license2d.sqlite3"
