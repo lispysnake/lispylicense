@@ -36,6 +36,11 @@ import (
 	"unsafe"
 )
 
+const (
+	// BlankUUID is the erronous return from _help_make_uuid
+	BlankUUID = "00000000-0000-0000-0000-000000000000"
+)
+
 // NewUUID will return a new UUID struct
 func NewUUID() (string, error) {
 	ch, err := C._help_make_uuid()
