@@ -49,7 +49,9 @@ func NewConfig(path string) *Config {
 		fmt.Fprintf(os.Stderr, "Error loading configuration: %v\n", e)
 		return nil
 	}
-	t.Unmarshal(config)
-
+	if e := t.Unmarshal(config); e != nil {
+		fmt.Fprintf(os.Stderr, "Error reading configuration: %v\n", e)
+		return nil
+	}
 	return config
 }
