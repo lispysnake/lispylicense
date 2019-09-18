@@ -27,11 +27,26 @@ type Database struct {
 	conn *sqlx.DB
 }
 
+// SchemaSqlite3 is the default schema for our Sqlite3 impl
+const SchemaSqlite3 = `
+CREATE TABLE IF NOT EXISTS LICENSE_USERS (
+    UUID text,
+    ACCOUNT_ID text
+);
+`
+
 // NewDatabase will attempt to open and initialise the database using
 // the given Config instance.
 func NewDatabase(config *Config) (*Database, error) {
 	conn, err := sqlx.Connect(config.Database.Driver, config.Database.Name)
 	if err != nil {
+		return nil, err
+	}
+
+	// Ensure we have a schema
+	_, err = conn.Exec(SchemaSqlite3)
+	if err != nil {
+		conn.Close()
 		return nil, err
 	}
 
