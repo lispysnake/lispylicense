@@ -78,5 +78,6 @@ func (d *Database) Close() {
 // ClaimLicense will attempt to claim the given license request,
 // and return the UUID for the allocation.
 func (d *Database) ClaimLicense(req LicenseRequest) (string, error) {
-	return "", nil
+	uuid, _ := NewUUID()
+	return uuid, nil
 }
