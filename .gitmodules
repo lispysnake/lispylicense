@@ -7,3 +7,6 @@
 [submodule "src/vendor/github.com/julienschmidt/httprouter"]
 	path = src/vendor/github.com/julienschmidt/httprouter
 	url = https://github.com/julienschmidt/httprouter.git
+[submodule "src/vendor/github.com/pelletier/go-toml"]
+	path = src/vendor/github.com/pelletier/go-toml
+	url = https://github.com/pelletier/go-toml.git
