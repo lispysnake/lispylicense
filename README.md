@@ -17,8 +17,11 @@ be 'valid'.
 
 ### Proposal
 
-Simple web service that allows us to generate a set of license keys
-on demand, and add new users into the system to allocate their license.
+Microservice to handle license key generation and allocation.
+Allocation is performed based on an ACCOUNT_ID field, to allow us to
+perform a future migration from the initial signup email to a hub
+account ID.
+
 For now, this is a manual process of allocation, but in future we may
 work out something more automatic:
 
