@@ -1,0 +1,7 @@
+[database]
+
+# Currently we only support sqlite3.
+driver = "sqlite3"
+
+# Set the path of the database.
+name = ":memory:"
