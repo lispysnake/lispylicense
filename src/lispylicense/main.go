@@ -32,9 +32,6 @@ func main() {
 	if config == nil {
 		os.Exit(1)
 	}
-	for i := 0; i < 1000; i++ {
-		u, _ := NewUUID()
-		fmt.Println(u)
-	}
+	fmt.Println(database.ClaimLicense(LicenseRequest{"sample.user", "LICENSE.2D"}))
 	fmt.Println(config)
 }

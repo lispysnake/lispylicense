@@ -27,6 +27,12 @@ type Database struct {
 	conn *sqlx.DB
 }
 
+// LicenseRequest is used to serialise the basic license request.
+type LicenseRequest struct {
+	AccountID string // The ID for the license request
+	LicenseID string // The ID for the license being requested
+}
+
 // SchemaSqlite3 is the default schema for our Sqlite3 impl
 const SchemaSqlite3 = `
 CREATE TABLE IF NOT EXISTS LICENSE_USERS (
@@ -67,4 +73,10 @@ func (d *Database) Close() {
 	if d.conn != nil {
 		d.conn.Close()
 	}
+}
+
+// ClaimLicense will attempt to claim the given license request,
+// and return the UUID for the allocation.
+func (d *Database) ClaimLicense(req LicenseRequest) (string, error) {
+	return "", nil
 }
