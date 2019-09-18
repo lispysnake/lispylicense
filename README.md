@@ -37,3 +37,9 @@ To ensure minimal security risk, we recommend running the license
 server internally (behind the firewall). Then the account service,
 userfacing, can internally be updated with license state from this
 service.
+
+### License
+
+Copyright © 2019 Lispy Snake, Ltd.
+
+`lispylicense` is available under the terms of the `Apache-2.0` license
