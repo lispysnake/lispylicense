@@ -31,7 +31,14 @@ type Database struct {
 const SchemaSqlite3 = `
 CREATE TABLE IF NOT EXISTS LICENSE_USERS (
     UUID text,
-    ACCOUNT_ID text
+    ACCOUNT_ID text,
+    LICENSE_ID text
+);
+
+CREATE TABLE IF NOT EXISTS LICENSE_SPECS (
+    ID text,
+    DESC text,
+    MAX_USERS INT
 );
 `
 
