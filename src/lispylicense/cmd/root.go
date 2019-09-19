@@ -51,3 +51,9 @@ func Close() {
 	manager.Close()
 	manager = nil
 }
+
+// Exit is used to prevent leaking the Manager.
+func Exit(statusCode int) {
+	Close()
+	os.Exit(statusCode)
+}

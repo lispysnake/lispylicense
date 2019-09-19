@@ -18,12 +18,11 @@ package main
 
 import (
 	"lispylicense/cmd"
-	"os"
 )
 
 func main() {
 	defer cmd.Close()
 	if err := cmd.RootCommand.Execute(); err != nil {
-		os.Exit(1)
+		cmd.Exit(1)
 	}
 }
