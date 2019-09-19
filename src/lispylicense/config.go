@@ -17,9 +17,7 @@
 package main
 
 import (
-	"fmt"
 	toml "github.com/pelletier/go-toml"
-	"os"
 )
 
 const (
@@ -39,19 +37,17 @@ type Config struct {
 
 // NewConfig will return a new Config object preseeded from the
 // default configuration path.
-func NewConfig(path string) *Config {
+func NewConfig(path string) (*Config, error) {
 	config := &Config{}
 	config.Database.Driver = "sqlite3"
 	config.Database.Name = ":memory:"
 
-	t, e := toml.LoadFile(DefaultConfigPath)
-	if e != nil {
-		fmt.Fprintf(os.Stderr, "Error loading configuration: %v\n", e)
-		return nil
+	t, err := toml.LoadFile(DefaultConfigPath)
+	if err != nil {
+		return nil, err
 	}
-	if e := t.Unmarshal(config); e != nil {
-		fmt.Fprintf(os.Stderr, "Error reading configuration: %v\n", e)
-		return nil
+	if err = t.Unmarshal(config); err != nil {
+		return nil, err
 	}
-	return config
+	return config, err
 }

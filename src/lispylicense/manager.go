@@ -24,6 +24,28 @@ type Manager struct {
 }
 
 // NewManager will create a new manager instance and start the ball rolling
-func NewManager() *Manager {
-	return &Manager{}
+func NewManager() (*Manager, error) {
+	var err error
+	manager := &Manager{}
+
+	// Get our configuration going
+	manager.config, err = NewConfig(DefaultConfigPath)
+	if err != nil {
+		return nil, err
+	}
+
+	// Ensure we have a database now.
+	manager.database, err = NewDatabase(manager.config)
+	if err != nil {
+		return nil, err
+	}
+
+	return manager, nil
+}
+
+// Close will close any underlying connections and resources
+func (m *Manager) Close() {
+	if m.database != nil {
+		m.database.Close()
+	}
 }

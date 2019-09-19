@@ -22,16 +22,10 @@ import (
 )
 
 func main() {
-	config := NewConfig(DefaultConfigPath)
-	database, err := NewDatabase(config)
+	manager, err := NewManager()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Fatal database error: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Fatal setup error: %v\n", err)
 		os.Exit(1)
 	}
-	defer database.Close()
-	if config == nil {
-		os.Exit(1)
-	}
-	fmt.Println(database.ClaimLicense(LicenseRequest{"sample.user", "LICENSE.2D"}))
-	fmt.Println(config)
+	defer manager.Close()
 }
