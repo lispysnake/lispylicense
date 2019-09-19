@@ -24,12 +24,12 @@ type Manager struct {
 }
 
 // NewManager will create a new manager instance and start the ball rolling
-func NewManager() (*Manager, error) {
+func NewManager(configFilename string) (*Manager, error) {
 	var err error
 	manager := &Manager{}
 
 	// Get our configuration going
-	manager.config, err = NewConfig(DefaultConfigPath)
+	manager.config, err = NewConfig(configFilename)
 	if err != nil {
 		return nil, err
 	}

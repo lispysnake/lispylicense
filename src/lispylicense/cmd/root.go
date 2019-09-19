@@ -24,7 +24,8 @@ import (
 )
 
 var (
-	manager *license.Manager
+	manager        *license.Manager
+	configFilename string
 )
 
 // RootCommand is the top-level command (and parent) of our CLI
@@ -35,12 +36,17 @@ var RootCommand = &cobra.Command{
 
 // Private helper for commands requiring a manager instance.
 func prerunManager(cmd *cobra.Command, args []string) {
-	m, err := license.NewManager()
+	m, err := license.NewManager(configFilename)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		os.Exit(1)
 	}
 	manager = m
+}
+
+func init() {
+	configFilename = license.DefaultConfigPath
+	RootCommand.PersistentFlags().StringVarP(&configFilename, "config", "c", license.DefaultConfigPath, "Set the configuration file")
 }
 
 // Close will help close up the CLI resources
