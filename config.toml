@@ -4,4 +4,9 @@
 driver = "sqlite3"
 
 # Set the path of the database.
-name = "../db_sync/license2d.sqlite3"
+name = "database.sqlite3"
+
+[email]
+
+# none, smtp
+method = ""
