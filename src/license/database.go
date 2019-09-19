@@ -28,10 +28,17 @@ type Database struct {
 	conn *sqlx.DB
 }
 
-// Request is used to serialise the basic license request.
-type Request struct {
+// AssignRequest is used to serialise the basic license request.
+type AssignRequest struct {
 	AccountID string // The ID for the license request
 	LicenseID string // The ID for the license being requested
+}
+
+// CreateRequest is used for creating new licenses
+type CreateRequest struct {
+	LicenseID   string // The ID of the license
+	Description string // Description of the license
+	MaxUsers    int    // Maximum number of users for the license
 }
 
 // SchemaSqlite3 is the default schema for our Sqlite3 impl
@@ -76,9 +83,9 @@ func (d *Database) Close() {
 	}
 }
 
-// ClaimLicense will attempt to claim the given license request,
+// Assign will attempt to claim the given license request,
 // and return the UUID for the allocation.
-func (d *Database) ClaimLicense(req Request) (string, error) {
+func (d *Database) Assign(req AssignRequest) (string, error) {
 	uuid, _ := NewUUID()
 	return uuid, nil
 }
