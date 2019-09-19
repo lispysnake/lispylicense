@@ -9,4 +9,9 @@ name = "database.sqlite3"
 [email]
 
 # none, smtp
-method = ""
+method = "none"
+
+smtp_user = "yourusername"
+smtp_port = 587
+smtp_host = "smtp.google.com"
+smtp_pass = "yourpassword"
