@@ -17,7 +17,6 @@
 package license
 
 import (
-	"errors"
 	"github.com/jmoiron/sqlx"
 	// Build go-sqlite3 support into the application too
 	_ "github.com/mattn/go-sqlite3"
@@ -31,6 +30,7 @@ type Database struct {
 
 // AssignRequest is used to serialise the basic license request.
 type AssignRequest struct {
+	UUID      string `db:"uuid"`       // UUID (set internally)
 	AccountID string `db:"account_id"` // The ID for the license request
 	LicenseID string `db:"license_id"` // The ID for the license being requested
 }
@@ -87,7 +87,17 @@ func (d *Database) Close() {
 // Assign will attempt to claim the given license request,
 // and return the UUID for the allocation.
 func (d *Database) Assign(req AssignRequest) (string, error) {
-	return "", errors.New("Not yet implemented")
+	uuid, err := NewUUID()
+	if err != nil {
+		return "", err
+	}
+	req.UUID = uuid
+	q := "INSERT  INTO LICENSE_USERS (UUID, ACCOUNT_ID, LICENSE_ID) VALUES (:uuid, :account_id, :license_id)"
+	_, err = d.conn.NamedExec(q, &req)
+	if err != nil {
+		return "", err
+	}
+	return uuid, nil
 }
 
 // InsertLicense will insert a new license if possible
