@@ -14,15 +14,14 @@
 // limitations under the License.
 //
 
-package main
+package cmd
 
 import (
-	"lispylicense/cmd"
-	"os"
+	"github.com/spf13/cobra"
 )
 
-func main() {
-	if err := cmd.RootCommand.Execute(); err != nil {
-		os.Exit(1)
-	}
+// RootCommand is the top-level command (and parent) of our CLI
+var RootCommand = &cobra.Command{
+	Use:   "lispylicense",
+	Short: "lispylicense is the Lispy Snake, Ltd. license tool",
 }
