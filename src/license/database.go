@@ -47,10 +47,11 @@ type CreateRequest struct {
 // Info type is used to validate a License entry and find out
 // various facts about it.
 type Info struct {
-	Description    string // Description of the license
-	CurrentUsers   int    // Curent number of users for this license
-	MaxUsers       int    // Maximum number of users for this license
-	RemainingUsers int    // Remaining number of users for this license
+	Description    string  // Description of the license
+	CurrentUsers   int     // Curent number of users for this license
+	MaxUsers       int     // Maximum number of users for this license
+	RemainingUsers int     // Remaining number of users for this license
+	FillRatio      float64 // How 'full' our sales are
 }
 
 type licenseStore struct {
@@ -121,18 +122,21 @@ func (d *Database) GetInfo(id string) (*Info, error) {
 		return nil, err
 	}
 
-	// Remaining user count
-	remUsers := -1
-	if req.MaxUsers > 0 {
-		remUsers = req.MaxUsers - count
-	}
-
-	return &Info{
+	info := &Info{
 		Description:    req.Desc,
 		CurrentUsers:   count,
 		MaxUsers:       req.MaxUsers,
-		RemainingUsers: remUsers,
-	}, nil
+		RemainingUsers: 0,
+		FillRatio:      0.0,
+	}
+
+	// Remaining user count
+	if req.MaxUsers > 0 {
+		info.RemainingUsers = req.MaxUsers - count
+		info.FillRatio = float64(info.CurrentUsers) / float64(info.MaxUsers)
+	}
+
+	return info, nil
 }
 
 // Assign will attempt to claim the given license request,

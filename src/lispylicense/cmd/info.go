@@ -46,6 +46,7 @@ func info(cmd *cobra.Command, args []string) {
 		fmt.Printf("Maximum users: %v\n", info.MaxUsers)
 		fmt.Printf("Remaining users: %v\n", info.RemainingUsers)
 		fmt.Printf("Current users: %v\n", info.CurrentUsers)
+		fmt.Printf("Fill ratio: %.2f%%\n", info.FillRatio*100.0)
 	}
 	fmt.Printf("License description: %s\n", info.Description)
 }
