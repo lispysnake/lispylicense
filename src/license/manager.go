@@ -16,10 +16,6 @@
 
 package license
 
-import (
-	"errors"
-)
-
 // A Manager instace is responsible for the DB connection, and assigning
 // license users as well as the input of new licenses.
 type Manager struct {
@@ -57,11 +53,18 @@ func (m *Manager) Close() {
 // CreateLicense will attempt to create the new named license within the
 // database for subscription by users.
 func (m *Manager) CreateLicense(id string, maxUsers int, desc string) error {
-	return errors.New("Not yet implemented")
+	return m.database.InsertLicense(CreateRequest{
+		LicenseID:   id,
+		Description: desc,
+		MaxUsers:    maxUsers,
+	})
 }
 
 // AssignLicense will attempt to assign the license_id to account_id, returning
 // the UUID for the new subscription if successful.
 func (m *Manager) AssignLicense(accountID, licenseID string) (string, error) {
-	return "", errors.New("Not yet implemented")
+	return m.database.Assign(AssignRequest{
+		AccountID: accountID,
+		LicenseID: licenseID,
+	})
 }

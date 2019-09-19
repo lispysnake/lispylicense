@@ -17,6 +17,7 @@
 package license
 
 import (
+	"errors"
 	"github.com/jmoiron/sqlx"
 	// Build go-sqlite3 support into the application too
 	_ "github.com/mattn/go-sqlite3"
@@ -44,14 +45,14 @@ type CreateRequest struct {
 // SchemaSqlite3 is the default schema for our Sqlite3 impl
 const SchemaSqlite3 = `
 CREATE TABLE IF NOT EXISTS LICENSE_USERS (
-    UUID text,
-    ACCOUNT_ID text,
-    LICENSE_ID text
+    UUID text UNIQUE NOT NULL,
+    ACCOUNT_ID text NOT NULL,
+    LICENSE_ID text NOT NULL 
 );
 
 CREATE TABLE IF NOT EXISTS LICENSE_SPECS (
-    ID text,
-    DESC text,
+    ID text UNIQUE NOT NULL,
+    DESC text NULL,
     MAX_USERS INT
 );
 `
@@ -86,6 +87,10 @@ func (d *Database) Close() {
 // Assign will attempt to claim the given license request,
 // and return the UUID for the allocation.
 func (d *Database) Assign(req AssignRequest) (string, error) {
-	uuid, _ := NewUUID()
-	return uuid, nil
+	return "", errors.New("Not yet implemented")
+}
+
+// InsertLicense will insert a new license if possible
+func (d *Database) InsertLicense(req CreateRequest) error {
+	return errors.New("Not yet implemented")
 }
