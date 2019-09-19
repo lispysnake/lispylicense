@@ -59,3 +59,9 @@ func (m *Manager) Close() {
 func (m *Manager) CreateLicense(id string, maxUsers int, desc string) error {
 	return errors.New("Not yet implemented")
 }
+
+// AssignLicense will attempt to assign the license_id to account_id, returning
+// the UUID for the new subscription if successful.
+func (m *Manager) AssignLicense(accountID, licenseID string) (string, error) {
+	return "", errors.New("Not yet implemented")
+}
