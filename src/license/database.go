@@ -17,7 +17,9 @@
 package license
 
 import (
+	"fmt"
 	"github.com/jmoiron/sqlx"
+
 	// Build go-sqlite3 support into the application too
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -84,9 +86,44 @@ func (d *Database) Close() {
 	}
 }
 
+// Helper function to determine the current number of licenses, and the
+// maximum number of licenses.
+func (d *Database) getLicenseeNumbers(id string) (int, int, error) {
+	var (
+		count int
+		max   int
+	)
+
+	// Grab the current number of licenses
+	q := "SELECT COUNT(*) FROM LICENSE_USERS WHERE LICENSE_ID = ?;"
+	err := d.conn.Get(&count, q, id)
+	if err != nil {
+		return -1, -1, err
+	}
+
+	// Get the max users
+	q = "SELECT MAX_USERS FROM LICENSE_SPECS WHERE ID = ?;"
+	err = d.conn.Get(&max, q, id)
+	if err != nil {
+		return -1, -1, err
+	}
+
+	return count, max, nil
+}
+
 // Assign will attempt to claim the given license request,
 // and return the UUID for the allocation.
 func (d *Database) Assign(req AssignRequest) (string, error) {
+	// Ensure the license exists and hasn't exceeded counts
+	curUsers, maxUsers, err := d.getLicenseeNumbers(req.LicenseID)
+	if err != nil {
+		return "", err
+	}
+
+	if maxUsers > 0 && curUsers+1 > maxUsers {
+		return "", fmt.Errorf("Cannot assign user to license '%v' as maxUser count of '%v' would be exceeded", req.LicenseID, maxUsers)
+	}
+
 	uuid, err := NewUUID()
 	if err != nil {
 		return "", err
