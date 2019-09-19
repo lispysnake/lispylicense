@@ -141,7 +141,7 @@ func (d *Database) GetInfo(id string) (*Info, error) {
 
 // Assign will attempt to claim the given license request,
 // and return the UUID for the allocation.
-func (d *Database) Assign(req AssignRequest) (string, error) {
+func (d *Database) Assign(req *AssignRequest) (string, error) {
 	info, err := d.GetInfo(req.LicenseID)
 	if err != nil {
 		return "", err

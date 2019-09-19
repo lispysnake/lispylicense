@@ -65,6 +65,14 @@ func (c *Config) validateEmail() error {
 	return nil
 }
 
+// ShouldEmail will return true if we should email the new licenses
+func (c *Config) ShouldEmail() bool {
+	if c.Email.Method == "" || c.Email.Method == "none" {
+		return false
+	}
+	return true
+}
+
 // NewConfig will return a new Config object preseeded from the
 // default configuration path.
 func NewConfig(path string) (*Config, error) {

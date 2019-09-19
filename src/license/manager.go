@@ -16,6 +16,10 @@
 
 package license
 
+import (
+	"fmt"
+)
+
 // A Manager instace is responsible for the DB connection, and assigning
 // license users as well as the input of new licenses.
 type Manager struct {
@@ -63,10 +67,36 @@ func (m *Manager) CreateLicense(id string, maxUsers int, desc string) error {
 // AssignLicense will attempt to assign the license_id to account_id, returning
 // the UUID for the new subscription if successful.
 func (m *Manager) AssignLicense(accountID, licenseID string) (string, error) {
-	return m.database.Assign(AssignRequest{
+	req := &AssignRequest{
 		AccountID: accountID,
 		LicenseID: licenseID,
-	})
+	}
+
+	uuid, err := m.database.Assign(req)
+	if err != nil {
+		return "", err
+	}
+
+	// Try to send an email..
+	if !m.config.ShouldEmail() {
+		return uuid, nil
+	}
+
+	// Grab license info now.
+	info, err := m.database.GetInfo(licenseID)
+	if err != nil {
+		return uuid, err
+	}
+
+	// Construct an email
+	email, err := NewEmail(req, info)
+	if err != nil {
+		return uuid, err
+	}
+
+	fmt.Println(email.rendered)
+
+	return uuid, nil
 }
 
 // GetInfo will return information for the given license ID
