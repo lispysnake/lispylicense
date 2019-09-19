@@ -44,6 +44,21 @@ type CreateRequest struct {
 	MaxUsers    int    `db:"max_users"`   // Maximum number of users for the license
 }
 
+// Info type is used to validate a License entry and find out
+// various facts about it.
+type Info struct {
+	Description    string // Description of the license
+	CurrentUsers   int    // Curent number of users for this license
+	MaxUsers       int    // Maximum number of users for this license
+	RemainingUsers int    // Remaining number of users for this license
+}
+
+type licenseStore struct {
+	ID       string `db:"ID"`
+	Desc     string `db:"DESC"`
+	MaxUsers int    `db:"MAX_USERS"`
+}
+
 // SchemaSqlite3 is the default schema for our Sqlite3 impl
 const SchemaSqlite3 = `
 CREATE TABLE IF NOT EXISTS LICENSE_USERS (
@@ -86,42 +101,50 @@ func (d *Database) Close() {
 	}
 }
 
-// Helper function to determine the current number of licenses, and the
-// maximum number of licenses.
-func (d *Database) getLicenseeNumbers(id string) (int, int, error) {
-	var (
-		count int
-		max   int
-	)
+// GetInfo will return an Info type populated with information on the
+// given license. If the license doesn't exist, then no info will be
+// returned, and the user cannot be assigned the license.
+func (d *Database) GetInfo(id string) (*Info, error) {
+	var count int
+	var req licenseStore
 
 	// Grab the current number of licenses
 	q := "SELECT COUNT(*) FROM LICENSE_USERS WHERE LICENSE_ID = ?;"
 	err := d.conn.Get(&count, q, id)
 	if err != nil {
-		return -1, -1, err
+		return nil, err
 	}
 
-	// Get the max users
-	q = "SELECT MAX_USERS FROM LICENSE_SPECS WHERE ID = ?;"
-	err = d.conn.Get(&max, q, id)
+	q = "SELECT * FROM LICENSE_SPECS WHERE ID = ?;"
+	err = d.conn.Get(&req, q, id)
 	if err != nil {
-		return -1, -1, err
+		return nil, err
 	}
 
-	return count, max, nil
+	// Remaining user count
+	remUsers := -1
+	if req.MaxUsers > 0 {
+		remUsers = req.MaxUsers - count
+	}
+
+	return &Info{
+		Description:    req.Desc,
+		CurrentUsers:   count,
+		MaxUsers:       req.MaxUsers,
+		RemainingUsers: remUsers,
+	}, nil
 }
 
 // Assign will attempt to claim the given license request,
 // and return the UUID for the allocation.
 func (d *Database) Assign(req AssignRequest) (string, error) {
-	// Ensure the license exists and hasn't exceeded counts
-	curUsers, maxUsers, err := d.getLicenseeNumbers(req.LicenseID)
+	info, err := d.GetInfo(req.LicenseID)
 	if err != nil {
 		return "", err
 	}
 
-	if maxUsers > 0 && curUsers+1 > maxUsers {
-		return "", fmt.Errorf("Cannot assign user to license '%v' as maxUser count of '%v' would be exceeded", req.LicenseID, maxUsers)
+	if info.MaxUsers > 0 && info.RemainingUsers < 1 {
+		return "", fmt.Errorf("Cannot assign user to license '%v' as maxUser count of '%v' would be exceeded", req.LicenseID, info.MaxUsers)
 	}
 
 	uuid, err := NewUUID()
