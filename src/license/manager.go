@@ -68,3 +68,8 @@ func (m *Manager) AssignLicense(accountID, licenseID string) (string, error) {
 		LicenseID: licenseID,
 	})
 }
+
+// GetInfo will return information for the given license ID
+func (m *Manager) GetInfo(licenseID string) (*Info, error) {
+	return m.database.GetInfo(licenseID)
+}
