@@ -7,7 +7,7 @@ Work in progress project to handle product license generation and
 management.
 
 Our initial scope is to facilitate the pregeneration of 1,000 license
-keys and allocate them to Lispy Snake 2D Tite Lifetime License holders.
+keys and allocate them to Lispy Snake 2D Title Lifetime License holders.
 
 ### Initial alpha
 
