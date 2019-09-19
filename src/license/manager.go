@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-package main
+package license
 
 // A Manager instace is responsible for the DB connection, and assigning
 // license users as well as the input of new licenses.

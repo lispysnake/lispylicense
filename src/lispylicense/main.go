@@ -18,11 +18,12 @@ package main
 
 import (
 	"fmt"
+	"license"
 	"os"
 )
 
 func main() {
-	manager, err := NewManager()
+	manager, err := license.NewManager()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Fatal setup error: %v\n", err)
 		os.Exit(1)

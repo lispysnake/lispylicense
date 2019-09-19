@@ -14,10 +14,11 @@
 // limitations under the License.
 //
 
-package main
+package license
 
 import (
 	"github.com/jmoiron/sqlx"
+	// Build go-sqlite3 support into the application too
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -27,8 +28,8 @@ type Database struct {
 	conn *sqlx.DB
 }
 
-// LicenseRequest is used to serialise the basic license request.
-type LicenseRequest struct {
+// Request is used to serialise the basic license request.
+type Request struct {
 	AccountID string // The ID for the license request
 	LicenseID string // The ID for the license being requested
 }
@@ -77,7 +78,7 @@ func (d *Database) Close() {
 
 // ClaimLicense will attempt to claim the given license request,
 // and return the UUID for the allocation.
-func (d *Database) ClaimLicense(req LicenseRequest) (string, error) {
+func (d *Database) ClaimLicense(req Request) (string, error) {
 	uuid, _ := NewUUID()
 	return uuid, nil
 }

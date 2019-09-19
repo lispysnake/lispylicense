@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-package main
+package license
 
 //
 // #cgo pkg-config: uuid
