@@ -47,11 +47,11 @@ type CreateRequest struct {
 // Info type is used to validate a License entry and find out
 // various facts about it.
 type Info struct {
-	Description    string  // Description of the license
-	CurrentUsers   int     // Curent number of users for this license
-	MaxUsers       int     // Maximum number of users for this license
-	RemainingUsers int     // Remaining number of users for this license
-	FillRatio      float64 // How 'full' our sales are
+	Description    string  `json:"description"`     // Description of the license
+	CurrentUsers   int     `json:"current_users"`   // Curent number of users for this license
+	MaxUsers       int     `json:"max_users"`       // Maximum number of users for this license
+	RemainingUsers int     `json:"remaining_users"` // Remaining number of users for this license
+	FillRatio      float64 `json:"fill_ratio"`      // How 'full' our sales are
 }
 
 type licenseStore struct {

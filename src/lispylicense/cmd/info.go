@@ -17,6 +17,7 @@
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/spf13/cobra"
 	"os"
@@ -30,7 +31,11 @@ var infoCommand = &cobra.Command{
 	Args:   cobra.ExactArgs(1),
 }
 
+var emitJSON bool
+
 func init() {
+	emitJSON = false
+	infoCommand.PersistentFlags().BoolVarP(&emitJSON, "json", "j", false, "Emit JSON output")
 	RootCommand.AddCommand(infoCommand)
 }
 
@@ -41,14 +46,23 @@ func info(cmd *cobra.Command, args []string) {
 		Exit(1)
 	}
 
-	fmt.Printf("Information for license: %v\n", args[0])
-	if info.MaxUsers > 0 {
-		fmt.Printf("Maximum users: %v\n", info.MaxUsers)
-		fmt.Printf("Remaining users: %v\n", info.RemainingUsers)
-		fmt.Printf("Current users: %v\n", info.CurrentUsers)
-		fmt.Printf("Fill ratio: %.2f%%\n", info.FillRatio*100.0)
+	if emitJSON {
+		j, err := json.MarshalIndent(&info, "", "\t")
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "JSON Error: %v\n", err)
+			Exit(1)
+		}
+		fmt.Println(string(j))
 	} else {
-		fmt.Printf("Current users: %v\n", info.CurrentUsers)
+		fmt.Printf("Information for license: %v\n", args[0])
+		if info.MaxUsers > 0 {
+			fmt.Printf("Maximum users: %v\n", info.MaxUsers)
+			fmt.Printf("Remaining users: %v\n", info.RemainingUsers)
+			fmt.Printf("Current users: %v\n", info.CurrentUsers)
+			fmt.Printf("Fill ratio: %.2f%%\n", info.FillRatio*100.0)
+		} else {
+			fmt.Printf("Current users: %v\n", info.CurrentUsers)
+		}
+		fmt.Printf("License description: %s\n", info.Description)
 	}
-	fmt.Printf("License description: %s\n", info.Description)
 }
