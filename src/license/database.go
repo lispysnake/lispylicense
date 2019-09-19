@@ -31,15 +31,15 @@ type Database struct {
 
 // AssignRequest is used to serialise the basic license request.
 type AssignRequest struct {
-	AccountID string // The ID for the license request
-	LicenseID string // The ID for the license being requested
+	AccountID string `db:"account_id"` // The ID for the license request
+	LicenseID string `db:"license_id"` // The ID for the license being requested
 }
 
 // CreateRequest is used for creating new licenses
 type CreateRequest struct {
-	LicenseID   string // The ID of the license
-	Description string // Description of the license
-	MaxUsers    int    // Maximum number of users for the license
+	LicenseID   string `db:"license_id"`  // The ID of the license
+	Description string `db:"description"` // Description of the license
+	MaxUsers    int    `db:"max_users"`   // Maximum number of users for the license
 }
 
 // SchemaSqlite3 is the default schema for our Sqlite3 impl
@@ -92,5 +92,7 @@ func (d *Database) Assign(req AssignRequest) (string, error) {
 
 // InsertLicense will insert a new license if possible
 func (d *Database) InsertLicense(req CreateRequest) error {
-	return errors.New("Not yet implemented")
+	q := "INSERT INTO LICENSE_SPECS (ID, DESC, MAX_USERS) VALUES (:license_id, :description, :max_users)"
+	_, err := d.conn.NamedExec(q, &req)
+	return err
 }
