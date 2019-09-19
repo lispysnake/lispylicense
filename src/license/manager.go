@@ -16,6 +16,10 @@
 
 package license
 
+import (
+	"errors"
+)
+
 // A Manager instace is responsible for the DB connection, and assigning
 // license users as well as the input of new licenses.
 type Manager struct {
@@ -48,4 +52,10 @@ func (m *Manager) Close() {
 	if m.database != nil {
 		m.database.Close()
 	}
+}
+
+// CreateLicense will attempt to create the new named license within the
+// database for subscription by users.
+func (m *Manager) CreateLicense(id string, maxUsers int, desc string) error {
+	return errors.New("Not yet implemented")
 }

@@ -42,5 +42,9 @@ func init() {
 }
 
 func createLicense(cmd *cobra.Command, args []string) {
-	fmt.Fprintf(os.Stderr, "Not yet implemented\n")
+	if err := manager.CreateLicense(args[0], maxUsers, description); err != nil {
+		fmt.Fprintf(os.Stderr, "Error creating license: %v\n", err)
+		Exit(1)
+	}
+	fmt.Printf("Successfully created license '%v'\n", args[0])
 }
