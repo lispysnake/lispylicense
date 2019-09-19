@@ -28,10 +28,11 @@ var (
 )
 
 var createLicenseCommand = &cobra.Command{
-	Use:   "create-license [name]",
-	Short: "Create a new license within the database",
-	Run:   createLicense,
-	Args:  cobra.ExactArgs(1),
+	Use:    "create-license [name]",
+	Short:  "Create a new license within the database",
+	Run:    createLicense,
+	PreRun: prerunManager,
+	Args:   cobra.ExactArgs(1),
 }
 
 func init() {

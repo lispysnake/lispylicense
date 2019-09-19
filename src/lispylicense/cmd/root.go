@@ -17,11 +17,37 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/spf13/cobra"
+	"license"
+	"os"
+)
+
+var (
+	manager *license.Manager
 )
 
 // RootCommand is the top-level command (and parent) of our CLI
 var RootCommand = &cobra.Command{
 	Use:   "lispylicense",
 	Short: "lispylicense is the Lispy Snake, Ltd. license tool",
+}
+
+// Private helper for commands requiring a manager instance.
+func prerunManager(cmd *cobra.Command, args []string) {
+	m, err := license.NewManager()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		os.Exit(1)
+	}
+	manager = m
+}
+
+// Close will help close up the CLI resources
+func Close() {
+	if manager == nil {
+		return
+	}
+	manager.Close()
+	manager = nil
 }
