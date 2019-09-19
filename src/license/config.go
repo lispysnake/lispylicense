@@ -38,6 +38,7 @@ type Config struct {
 
 	Email struct {
 		Method   string
+		From     string `toml:"from"`
 		SMTPUser string `toml:"smtp_user"`
 		SMTPPort int    `toml:"smtp_port"`
 		SMTPPass string `toml:"smtp_pass"`
@@ -80,6 +81,7 @@ func NewConfig(path string) (*Config, error) {
 	config.Database.Driver = "sqlite3"
 	config.Database.Name = ":memory:"
 
+	config.Email.From = "no-reply@localhost"
 	config.Email.Method = ""
 	config.Email.SMTPPort = 587
 

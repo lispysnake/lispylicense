@@ -18,7 +18,10 @@ package license
 
 import (
 	"bytes"
+	"fmt"
 	"html/template"
+	"net/smtp"
+	"strings"
 )
 
 type emailTemplate struct {
@@ -32,7 +35,7 @@ type emailTemplate struct {
 type Email struct {
 	req      *AssignRequest
 	info     *Info // Associated license info.
-	rendered string
+	rendered *bytes.Buffer
 }
 
 // NewEmail will create a new email for the given assignment
@@ -58,6 +61,20 @@ func NewEmail(req *AssignRequest, info *Info) (*Email, error) {
 
 	return &Email{
 		info:     info,
-		rendered: b.String(),
+		rendered: b,
 	}, nil
+}
+
+// Send will use the configuration to send an email.
+func (e *Email) Send(config *Config, from string, to []string) error {
+	txt := fmt.Sprintf("From: %v\r\n", from)
+	txt += fmt.Sprintf("To: %v\r\n", strings.Join(to, ", "))
+	txt += "Subject: Lispy Snake Ltd License\r\n"
+	txt += "MIME-version: 1.0\r\n"
+	txt += "Content-Type: text/html; charset=\"UTF-8\";\r\n\r\n"
+	txt += e.rendered.String()
+	auth := smtp.PlainAuth("", from, config.Email.SMTPPass, config.Email.SMTPHost)
+	addr := fmt.Sprintf("%s:%v", config.Email.SMTPHost, config.Email.SMTPPort)
+	err := smtp.SendMail(addr, auth, from, to, []byte(txt))
+	return err
 }

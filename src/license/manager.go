@@ -16,10 +16,6 @@
 
 package license
 
-import (
-	"fmt"
-)
-
 // A Manager instace is responsible for the DB connection, and assigning
 // license users as well as the input of new licenses.
 type Manager struct {
@@ -94,8 +90,9 @@ func (m *Manager) AssignLicense(accountID, licenseID string) (string, error) {
 		return uuid, err
 	}
 
-	fmt.Println(email.rendered)
-
+	if err = email.Send(m.config, m.config.Email.From, []string{req.AccountID}); err != nil {
+		return uuid, err
+	}
 	return uuid, nil
 }
 
