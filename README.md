@@ -1,5 +1,8 @@
 # lispylicense
 
+[![Report](https://goreportcard.com/badge/github.com/lispysnake/lispylicense)](https://goreportcard.com/report/github.com/lispysnake/lispylicense) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
+
 Work in progress project to handle product license generation and
 management.
 
