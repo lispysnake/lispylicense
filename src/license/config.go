@@ -42,7 +42,7 @@ func NewConfig(path string) (*Config, error) {
 	config.Database.Driver = "sqlite3"
 	config.Database.Name = ":memory:"
 
-	t, err := toml.LoadFile(DefaultConfigPath)
+	t, err := toml.LoadFile(path)
 	if err != nil {
 		return nil, err
 	}
