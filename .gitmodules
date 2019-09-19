@@ -10,3 +10,9 @@
 [submodule "src/vendor/github.com/pelletier/go-toml"]
 	path = src/vendor/github.com/pelletier/go-toml
 	url = https://github.com/pelletier/go-toml.git
+[submodule "src/vendor/github.com/spf13/cobra"]
+	path = src/vendor/github.com/spf13/cobra
+	url = https://github.com/spf13/cobra.git
+[submodule "src/vendor/github.com/spf13/pflag"]
+	path = src/vendor/github.com/spf13/pflag
+	url = https://github.com/spf13/pflag.git
